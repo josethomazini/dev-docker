@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgis/postgis:12-3.4-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ${DOCKER_VOLUMES}/postgres/data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - devdockernetwork
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - 16543:80
+    depends_on:
+      - postgres
+    networks:
+      - devdockernetwork
+
+networks:
+  devdockernetwork:
+    driver: bridge
